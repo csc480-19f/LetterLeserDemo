@@ -30,8 +30,8 @@ public class Websocket {
     @OnMessage // method that communicates with clients
     public void onMessage(String message, Session session) {
         JsonObject jmessage = new JsonParser().parse(message).getAsJsonObject();
-        String messageType = jmessage.get("messagetype").toString();
-        String email = jmessage.get("email").toString();
+        String messageType = jmessage.get("messagetype").getAsString();
+        String email = jmessage.get("email").getAsString();
         if(messageType.equals("refresh")){
             try {
                 JsonObject js = new JsonObject();
@@ -51,7 +51,7 @@ public class Websocket {
         }else if(messageType.equals("addfavorite")){
 
             JsonObject fav = jmessage.get("favorite").getAsJsonObject();
-            String name = fav.get("name").toString();
+            String name = fav.get("name").getAsString();
             HashMap<String,String> favlist = userFavList.get(email);
             favlist.put(name,fav.toString());
             userFavList.put(email,favlist);
@@ -78,7 +78,7 @@ public class Websocket {
             }
 
         }else if(messageType.equals("removefavorite")){
-            String favorite = jmessage.get("favoritename").toString();
+            String favorite = jmessage.get("favoritename").getAsString();
             HashMap favlist = userFavList.get(email);
             favlist.remove(favorite);
             ArrayList<String> l = new ArrayList<>(favlist.keySet());
@@ -95,7 +95,7 @@ public class Websocket {
                 e.printStackTrace();
             }
         }else if(messageType.equals("login")){
-            String pass = jmessage.get("pass").toString();
+            String pass = jmessage.get("pass").getAsString();
             Mailer mailer = new Mailer(email,pass);
             if(mailer.isConnected()){
                 try {
