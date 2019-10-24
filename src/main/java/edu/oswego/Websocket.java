@@ -4,14 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import javax.mail.Folder;
-import javax.mail.MessagingException;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 
@@ -113,7 +111,7 @@ public class Websocket {
                 ja.add("oswego");
                 ja.add("spam");
                 ja.add("important");
-                folders.add("foldernames", ja);
+                folders.add("foldername", ja);
                 try {
                     session.getBasicRemote().sendText(folders.toString());
                 } catch (IOException e) {

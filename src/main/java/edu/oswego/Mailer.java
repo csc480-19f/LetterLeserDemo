@@ -33,8 +33,23 @@ public class Mailer {
 	}
 
 	public boolean isConnected() {
-		getStorage();
-		return storage.isConnected();
+		try {
+			Properties props = new Properties();
+			props.put("mail.smtp.starttls.enable","true");
+			props.put("mail.smtp.auth", "true");
+			Session session = Session.getInstance(props, null);
+			Transport transport = session.getTransport("smtp");
+			transport.connect("smtp.gmail.com", 587, emailAddress, password);
+			transport.close();
+			return true;
+		}
+		catch(AuthenticationFailedException e) {
+			e.printStackTrace();
+		}
+		catch(MessagingException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	/**
