@@ -29,32 +29,31 @@ public class Websocket {
      */
     @OnMessage // method that communicates with clients
     public void onMessage(String message, Session session) {
-
         JsonObject jmessage = new JsonParser().parse(message).getAsJsonObject();
-        String messageType = jmessage.get("messagetype").getAsString();
-        String email = jmessage.get("email").getAsString();
+        String messageType = jmessage.get("messagetype").toString();
+        String email = jmessage.get("email").toString();
         if(messageType.equals("refresh")){
             try {
                 JsonObject js = new JsonObject();
                 js.addProperty("messageType","statusupdate");
                 js.addProperty("message","refresh done");
-                session.getBasicRemote().sendText(js.getAsString());
+                session.getBasicRemote().sendText(js.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else if(messageType.equals("filter")){
             //JsonObject filter = jmessage.get("filter").getAsJsonObject();
             try {
-                session.getBasicRemote().sendText(generateData().getAsString());
+                session.getBasicRemote().sendText(generateData().toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else if(messageType.equals("addfavorite")){
 
             JsonObject fav = jmessage.get("favorite").getAsJsonObject();
-            String name = fav.get("name").getAsString();
+            String name = fav.get("name").toString();
             HashMap<String,String> favlist = userFavList.get(email);
-            favlist.put(name,fav.getAsString());
+            favlist.put(name,fav.toString());
             userFavList.put(email,favlist);
             ArrayList<String> l = new ArrayList<>(favlist.keySet());
 
@@ -65,21 +64,21 @@ public class Websocket {
             js.add("favoritenames",ja);
 
             try {
-                session.getBasicRemote().sendText(js.getAsString());
+                session.getBasicRemote().sendText(js.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else if(messageType.equals("callfavorite")){
-            //String favoriteName = jmessage.get("favoriteName").getAsString();
+            //String favoriteName = jmessage.get("favoriteName").toString();
             //JsonObject js = new JsonParser().parse(userFavList.get("email").get(favoriteName)).getAsJsonObject();
             try {
-                session.getBasicRemote().sendText(generateData().getAsString());
+                session.getBasicRemote().sendText(generateData().toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }else if(messageType.equals("removefavorite")){
-            String favorite = jmessage.get("favoritename").getAsString();
+            String favorite = jmessage.get("favoritename").toString();
             HashMap favlist = userFavList.get(email);
             favlist.remove(favorite);
             ArrayList<String> l = new ArrayList<>(favlist.keySet());
@@ -91,14 +90,22 @@ public class Websocket {
             js.add("favoritenames",ja);
 
             try {
-                session.getBasicRemote().sendText(js.getAsString());
+                session.getBasicRemote().sendText(""+js.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else if(messageType.equals("login")){
-            String pass = jmessage.get("pass").getAsString();
+            String pass = jmessage.get("pass").toString();
             Mailer mailer = new Mailer(email,pass);
             if(mailer.isConnected()){
+                try {
+                    JsonObject js = new JsonObject();
+                    js.addProperty("messagetype","statusupdate");
+                    js.addProperty("message","connected");
+                    session.getBasicRemote().sendText(js.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 JsonObject folders = new JsonObject();
                 JsonArray ja = new JsonArray();
                 ja.add("csc480");
@@ -108,7 +115,7 @@ public class Websocket {
                 ja.add("important");
                 folders.add("", ja);
                 try {
-                    session.getBasicRemote().sendText(folders.getAsString());
+                    session.getBasicRemote().sendText(folders.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -117,7 +124,7 @@ public class Websocket {
                     JsonObject js = new JsonObject();
                     js.addProperty("messagetype","statusupdate");
                     js.addProperty("message","didnt connect");
-                    session.getBasicRemote().sendText(js.getAsString());
+                    session.getBasicRemote().sendText(js.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -128,7 +135,7 @@ public class Websocket {
                 JsonObject js = new JsonObject();
                 js.addProperty("messagetype","statusupdate");
                 js.addProperty("message","invalid message type");
-                session.getBasicRemote().sendText(js.getAsString());
+                session.getBasicRemote().sendText(js.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
