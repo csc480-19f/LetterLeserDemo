@@ -113,7 +113,7 @@ public class Websocket {
                 ja.add("oswego");
                 ja.add("spam");
                 ja.add("important");
-                folders.add("", ja);
+                folders.add("foldernames", ja);
                 try {
                     session.getBasicRemote().sendText(folders.toString());
                 } catch (IOException e) {
