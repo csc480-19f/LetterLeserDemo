@@ -32,6 +32,10 @@ public class Mailer {
 		this.password = password; // UNSAFE. Lets encrypt.
 	}
 
+	public boolean isConnected() {
+		return getStorage().isConnected();
+	}
+
 	/**
 	 * Establish a connection using imap
 	 * 

@@ -4,18 +4,20 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import javax.mail.Folder;
+import javax.mail.MessagingException;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 
 @ServerEndpoint("/engine")
 public class Websocket {
     HashMap<String, HashMap<String,String>> userFavList = new HashMap<>();
-    HashMap<String, ArrayList<String>> userFolderList = new HashMap<>();
     @OnOpen
     public void onOpen(Session session) {
 
@@ -47,7 +49,7 @@ public class Websocket {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if(messageType.equals("addfavorites")){
+        }else if(messageType.equals("addfavorite")){
 
             JsonObject fav = jmessage.get("favorite").getAsJsonObject();
             String name = fav.get("name").getAsString();
@@ -95,10 +97,38 @@ public class Websocket {
             }
         }else if(messageType.equals("login")){
             String pass = jmessage.get("pass").getAsString();
+            Mailer mailer = new Mailer(email,pass);
+            if(mailer.isConnected()){
+                JsonObject folders = new JsonObject();
+                JsonArray ja = new JsonArray();
+                ja.add("csc480");
+                ja.add("work");
+                ja.add("oswego");
+                ja.add("spam");
+                ja.add("important");
+                folders.add("", ja);
+                try {
+                    session.getBasicRemote().sendText(folders.getAsString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                try {
+                    JsonObject js = new JsonObject();
+                    js.addProperty("messagetype","statusupdate");
+                    js.addProperty("message","didnt connect");
+                    session.getBasicRemote().sendText(js.getAsString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }else{
             try {
-                session.getBasicRemote().sendText("invalid messageType");
+                JsonObject js = new JsonObject();
+                js.addProperty("messagetype","statusupdate");
+                js.addProperty("message","invalid message type");
+                session.getBasicRemote().sendText(js.getAsString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -172,6 +202,8 @@ public class Websocket {
 
         return js;
     }
+
+
 
 
 }
