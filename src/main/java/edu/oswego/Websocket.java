@@ -51,6 +51,7 @@ public class Websocket {
 
             String name = jmessage.get("favoritename").getAsString();
             ArrayList<String> favlist = userFavList.get(email);
+            if(favlist==null){favlist = new ArrayList<>();}
             favlist.add(name);
             /*JsonObject filter = fav.get("filter").getAsJsonObject();
             favlist.put(name,filter.toString());*/
