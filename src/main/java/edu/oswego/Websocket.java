@@ -171,10 +171,19 @@ public class Websocket {
 
 
         //EmailsByFolder
-        JsonObject byFolder = new JsonObject();
-
-        for(int i=0;i<emails.size();i++){
-
+        JsonArray byFolder = new JsonArray();
+        ArrayList<String> fl = new ArrayList<>();
+        fl.add("csc480");
+        fl.add("work");
+        fl.add("oswego");
+        fl.add("spam");
+        fl.add("important");
+        for(int i=0;i<fl.size();i++){
+            JsonObject temp = new JsonObject();
+            temp.addProperty("folderobject",emails.get(i));
+            temp.addProperty("folderparent",0.0);
+            temp.addProperty("contribution", random.nextInt(200));
+            byFolder.add(temp);
         }
 
 
@@ -218,6 +227,7 @@ public class Websocket {
         js.add("numberofemails",emailssnr);
         js.add("timebetweenreplies",timeBetween);
         //js.add("emailbydomain",emailsByDomain);
+        js.add("emailbyfolder",byFolder);
 
         return js;
     }
