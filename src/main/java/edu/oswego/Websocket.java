@@ -15,7 +15,7 @@ import java.util.Random;
 
 @ServerEndpoint("/engine")
 public class Websocket {
-    HashMap<String, HashMap<String,String>> userFavList = new HashMap<>();
+    HashMap<String, ArrayList<String>> userFavList = new HashMap<>();
     @OnOpen
     public void onOpen(Session session) {
 
@@ -50,15 +50,15 @@ public class Websocket {
 
             JsonObject fav = jmessage.get("favorite").getAsJsonObject();
             String name = fav.get("favoritename").getAsString();
-            HashMap<String,String> favlist = userFavList.get(email);
-            JsonObject filter = fav.get("filter").getAsJsonObject();
-            favlist.put(name,filter.toString());
+            ArrayList<String> favlist = userFavList.get(email);
+            favlist.add(name);
+            /*JsonObject filter = fav.get("filter").getAsJsonObject();
+            favlist.put(name,filter.toString());*/
             userFavList.put(email,favlist);
-            ArrayList<String> l = new ArrayList<>(favlist.keySet());
 
             JsonObject js = new JsonObject();
             JsonArray ja = new JsonArray();
-            for(int i=0;i<l.size();i++){ja.add(l.get(i));}
+            for(int i=0;i<favlist.size();i++){ja.add(favlist.get(i));}
             js.addProperty("datatype","favoritenames");
             js.add("favoritenames",ja);
 
@@ -78,13 +78,12 @@ public class Websocket {
 
         }else if(messageType.equals("removefavorite")){
             String favorite = jmessage.get("favoritename").getAsString();
-            HashMap favlist = userFavList.get(email);
+            ArrayList<String> favlist = userFavList.get(email);
             favlist.remove(favorite);
-            ArrayList<String> l = new ArrayList<>(favlist.keySet());
 
             JsonObject js = new JsonObject();
             JsonArray ja = new JsonArray();
-            for(int i=0;i<l.size();i++){ja.add(l.get(i));}
+            for(int i=0;i<favlist.size();i++){ja.add(favlist.get(i));}
             js.addProperty("datatype","favoritenames");
             js.add("favoritenames",ja);
 
