@@ -10,7 +10,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Random;
 
 
@@ -50,9 +49,10 @@ public class Websocket {
         }else if(messageType.equals("addfavorite")){
 
             JsonObject fav = jmessage.get("favorite").getAsJsonObject();
-            String name = fav.get("name").getAsString();
+            String name = fav.get("favoritename").getAsString();
             HashMap<String,String> favlist = userFavList.get(email);
-            favlist.put(name,fav.toString());
+            JsonObject filter = fav.get("filter").getAsJsonObject();
+            favlist.put(name,filter.toString());
             userFavList.put(email,favlist);
             ArrayList<String> l = new ArrayList<>(favlist.keySet());
 
