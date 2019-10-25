@@ -165,30 +165,14 @@ public class Websocket {
         ArrayList<String> emails = listOfEmails();
         //email by domain
         HashMap<String,Integer> domains = new HashMap<>();
-        for(int i=0;i<emails.size();i++){
-            String end = emails.get(i).split("@")[1];
-            Integer x = domains.putIfAbsent(end, 1);
-            if (x != null) domains.replace(end, ++x);
-        }
-        JsonObject emailsByDomain = new JsonObject();
-        JsonArray domainObjs = new JsonArray();
-        for(String domain : domains.keySet()){
-            JsonObject domainObj = new JsonObject();
-            JsonObject innerData = new JsonObject();
-            String [] domainMeta = domain.split(".");
-            innerData.addProperty("domainname", domainMeta[1]);
-            innerData.addProperty("domainparent", domainMeta[0]);
-            innerData.addProperty("contribution", domains.get(domain));
-            domainObj.add("domainobj",innerData);
-            domainObjs.add(domainObj);
-        }
-        emailsByDomain.add("emailbydomain", domainObjs);
+
 
 
 
 
         //EmailsByFolder
         JsonObject byFolder = new JsonObject();
+
         for(int i=0;i<emails.size();i++){
 
         }
