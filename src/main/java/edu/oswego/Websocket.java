@@ -178,13 +178,12 @@ public class Websocket {
         ArrayList<String> names = new ArrayList<>(domains.keySet());
         for(int i=0;i<domains.size();i++){
             JsonObject temp = new JsonObject();
-
             temp.addProperty("domainname",names.get(i));
             temp.addProperty("domainparent",0.0);
             temp.addProperty("contribution",domains.get(names.get(i)));
-            js.add("domainobj",temp);
+            ja.add(temp);
         }
-        bydomain.add("emailbydomain",js);
+        bydomain.add("emailbydomain",ja);
 
 
 
