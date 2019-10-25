@@ -217,7 +217,7 @@ public class Websocket {
         js.add("emailssentandrecieved",esnr);
         js.add("numberofemails",emailssnr);
         js.add("timebetweenreplies",timeBetween);
-        js.add("emailbydomain",emailsByDomain);
+        //js.add("emailbydomain",emailsByDomain);
 
         return js;
     }
