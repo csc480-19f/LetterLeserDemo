@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
+import javax.json.Json;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -48,8 +49,7 @@ public class Websocket {
             }
         }else if(messageType.equals("addfavorite")){
 
-            JsonObject fav = jmessage.get("favorite").getAsJsonObject();
-            String name = fav.get("favoritename").getAsString();
+            String name = jmessage.get("favoritename").getAsString();
             ArrayList<String> favlist = userFavList.get(email);
             favlist.add(name);
             /*JsonObject filter = fav.get("filter").getAsJsonObject();
@@ -164,6 +164,27 @@ public class Websocket {
         ArrayList<String> emails = listOfEmails();
         //email by domain
         HashMap<String,Integer> domains = new HashMap<>();
+        for(int i=0;i<emails.size();i++){
+            String domainname = emails.get(i).split("@")[1];
+            if(domains.containsKey(domainname)){
+                int value = domains.get(domainname);
+                domains.replace(domainname,value+1);
+            }else{
+                domains.put(domainname,1);
+            }
+        }
+        JsonObject bydomain = new JsonObject();
+        JsonArray ja = new JsonArray();
+        ArrayList<String> names = new ArrayList<>(domains.keySet());
+        for(int i=0;i<domains.size();i++){
+            JsonObject temp = new JsonObject();
+
+            temp.addProperty("domainname",names.get(i));
+            temp.addProperty("domainparent",0.0);
+            temp.addProperty("contribution",domains.get(names.get(i)));
+            js.add("domainobj",temp);
+        }
+        bydomain.add("emailbydomain",js);
 
 
 
@@ -225,7 +246,7 @@ public class Websocket {
         js.add("emailssentandrecieved",esnr);
         js.add("numberofemails",emailssnr);
         js.add("timebetweenreplies",timeBetween);
-        //js.add("emailbydomain",emailsByDomain);
+        js.add("emailbydomain",bydomain);
         js.add("emailbyfolder",byFolder);
 
         return js;
@@ -245,17 +266,17 @@ public class Websocket {
         email.add("erupumiwe-6911@oswego.edu");
         email.add("attikoke-7524@oswego.edu");
         //dup here
-        email.add("jidugemmydd-0369@gmail.com");
-        email.add("zisommame-6038@gmail.com");
-        email.add("vonezatu-4361@gmail.com");
-        email.add("jynnufurri-3590@gmail.com");
-        email.add("issemawi-2110@yahoo.com");
-        email.add("ygagazob-8832@yahoo.com");
-        email.add("tocaffasab-8424@oswego.edu");
-        email.add("lebattomaffe-0720@oswego.edu");
-        email.add("ittodito-5049@oswego.edu");
-        email.add("erupumiwe-6911@oswego.edu");
-        email.add("attikoke-7524@oswego.edu");
+        email.add("jidd-0369@gmail.com");
+        email.add("zisoe-6038@gmail.com");
+        email.add("voneu-4361@gmail.com");
+        email.add("jynnri-3590@gmail.com");
+        email.add("issei-2110@yahoo.com");
+        email.add("ygag-8832@yahoo.com");
+        email.add("tocaab-8424@oswego.edu");
+        email.add("lebae-0720@oswego.edu");
+        email.add("itto-5049@oswego.edu");
+        email.add("erupe-6911@oswego.edu");
+        email.add("atti-7524@oswego.edu");
 
         return email;
     }
