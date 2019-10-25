@@ -10,6 +10,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Random;
 
 
@@ -161,10 +162,39 @@ public class Websocket {
         JsonObject seniment = new JsonObject();
         seniment.addProperty("sentimentscore",(random.nextFloat()*100));
 
-
+        ArrayList<String> emails = listOfEmails();
         //email by domain
+        HashMap<String,Integer> domains = new HashMap<>();
+        for(int i=0;i<emails.size();i++){
+            String end = emails.get(i).split("@")[1];
+            Integer x = domains.putIfAbsent(end, 1);
+            if (x != null) domains.replace(end, ++x);
+        }
+        JsonObject emailsByDomain = new JsonObject();
+        JsonArray domainObjs = new JsonArray();
+        for(String domain : domains.keySet()){
+            JsonObject domainObj = new JsonObject();
+            JsonObject innerData = new JsonObject();
+            String [] domainMeta = domain.split(".");
+            innerData.addProperty("domainname", domainMeta[1]);
+            innerData.addProperty("domainparent", domainMeta[0]);
+            innerData.addProperty("contribution", domains.get(domain));
+            domainObj.add("domainobj",innerData);
+            domainObjs.add(domainObj);
+        }
+        emailsByDomain.add("emailbydomain", domainObjs);
+
+
+
 
         //EmailsByFolder
+        JsonObject byFolder = new JsonObject();
+        for(int i=0;i<emails.size();i++){
+
+        }
+
+
+
 
         //EmailsSentAndRecieved
         JsonArray jaa1 = new JsonArray();
@@ -203,9 +233,38 @@ public class Websocket {
         js.add("emailssentandrecieved",esnr);
         js.add("numberofemails",emailssnr);
         js.add("timebetweenreplies",timeBetween);
-
+        js.add("emailbydomain",emailsByDomain);
 
         return js;
+    }
+
+    private ArrayList<String> listOfEmails(){
+        ArrayList<String> email = new ArrayList<>();
+        email.add("jidugemmydd-0369@gmail.com");
+        email.add("zisommame-6038@gmail.com");
+        email.add("vonezatu-4361@gmail.com");
+        email.add("jynnufurri-3590@gmail.com");
+        email.add("issemawi-2110@yahoo.com");
+        email.add("ygagazob-8832@yahoo.com");
+        email.add("tocaffasab-8424@oswego.edu");
+        email.add("lebattomaffe-0720@oswego.edu");
+        email.add("ittodito-5049@oswego.edu");
+        email.add("erupumiwe-6911@oswego.edu");
+        email.add("attikoke-7524@oswego.edu");
+        //dup here
+        email.add("jidugemmydd-0369@gmail.com");
+        email.add("zisommame-6038@gmail.com");
+        email.add("vonezatu-4361@gmail.com");
+        email.add("jynnufurri-3590@gmail.com");
+        email.add("issemawi-2110@yahoo.com");
+        email.add("ygagazob-8832@yahoo.com");
+        email.add("tocaffasab-8424@oswego.edu");
+        email.add("lebattomaffe-0720@oswego.edu");
+        email.add("ittodito-5049@oswego.edu");
+        email.add("erupumiwe-6911@oswego.edu");
+        email.add("attikoke-7524@oswego.edu");
+
+        return email;
     }
 
 
